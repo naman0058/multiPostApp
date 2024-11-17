@@ -69,18 +69,18 @@ passport.use(new LinkedInStrategy({
 
 
 passport.use(new InstagramStrategy({
-  clientID: '935002488442063',
-  clientSecret: 'ea1b89b41131753ed9c603acdd2f9f79',
+  clientID: '441162705660684',
+  clientSecret: '93e025dd145211f8b34581b24b6e27a4',
   callbackURL: "/auth/instagram/callback"
 },
 function(accessToken, refreshToken, profile, done) {
-  // const user = {
-  //   id: profile.id,
-  //   username: profile.displayName,
-  //   access_token: accessToken,
-  //   refresh_token: refreshToken,
-  //   profile: profile
-  // };
+  const user = {
+    id: profile.id,
+    username: profile.displayName,
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    profile: profile
+  };
   console.log('user details',accessToken)
   console.log('user details',refreshToken)
   console.log('user details',profile)
