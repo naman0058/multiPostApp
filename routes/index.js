@@ -424,75 +424,75 @@ router.get('/auth/instagram', passport.authenticate('instagram'));
 
 // Instagram callback route
 
-// router.get('/auth/instagram/callback', async (req, res) => {
-//   const code = req.query.code;  // Get the code from the callback request
+router.get('/auth/instagram/callback', async (req, res) => {
+  const code = req.query.code;  // Get the code from the callback request
 
-//   if (!code) {
-//     return res.status(400).send('Code not found');
-//   }
+  if (!code) {
+    return res.status(400).send('Code not found');
+  }
 
-//   try {
-//     // Prepare the payload for the token exchange
-//     const payload = {
-//       client_id: '441162705660684',
-//       client_secret: '93e025dd145211f8b34581b24b6e27a4',
-//       grant_type: 'authorization_code',
-//       redirect_uri: 'https://www.spvaig.com/auth/instagram/callback',  // This should match the one used in Step 1
-//       code: code
-//     };
+  try {
+    // Prepare the payload for the token exchange
+    const payload = {
+      client_id: '935002488442063',
+      client_secret: 'ea1b89b41131753ed9c603acdd2f9f79',
+      grant_type: 'authorization_code',
+      redirect_uri: 'https://www.spvaig.com/auth/instagram/callback',  // This should match the one used in Step 1
+      code: code
+    };
 
-//     // Send the POST request to exchange the code for the access token
-//     const response = await axios.post('https://api.instagram.com/oauth/access_token', null, {
-//       params: payload
-//     });
+    // Send the POST request to exchange the code for the access token
+    const response = await axios.post('https://api.instagram.com/oauth/access_token', null, {
+      params: payload
+    });
 
-//     const { access_token, user_id } = response.data;  // Extract access token and user ID
-//     console.log('code exchange response', response.data);
+    const { access_token, user_id } = response.data;  // Extract access token and user ID
+    console.log('code exchange response', response.data);
 
-//     // Redirect to /instagrampost route, passing the access token as a query parameter
-//     res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
+    // Redirect to /instagrampost route, passing the access token as a query parameter
+    res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
 
-//   } catch (error) {
-//     console.error('Error exchanging code for access token:', error.response ? error.response.data : error);
-//     res.status(500).send('Failed to exchange code for access token');
-//   }
-// });
+  } catch (error) {
+    console.error('Error exchanging code for access token:', error.response ? error.response.data : error);
+    res.status(500).send('Failed to exchange code for access token');
+  }
+});
 
 
-// router.get('/auth/instagram/callback', async (req, res) => {
-//   const code = req.query.code;  // Get the code from the callback request
+router.get('/auth/instagram/callback', async (req, res) => {
+  const code = req.query.code;  // Get the code from the callback request
 
-//   if (!code) {
-//     return res.status(400).send('Code not found');
-//   }
+  if (!code) {
+    return res.status(400).send('Code not found');
+  }
 
-//   try {
-//     // Prepare the payload for the token exchange
-//     const payload = new URLSearchParams();
-//     payload.append('client_id', '441162705660684');
-//     payload.append('client_secret', '93e025dd145211f8b34581b24b6e27a4');
-//     payload.append('grant_type', 'authorization_code');
-//     payload.append('redirect_uri', 'https://www.spvaig.com/auth/instagram/callback');  // Match the redirect URI used in Step 1
-//     payload.append('code', code);
+  try {
+    // Prepare the payload for the token exchange
+    const payload = new URLSearchParams();
+    payload.append('client_id', '935002488442063');
+    payload.append('client_secret', 'ea1b89b41131753ed9c603acdd2f9f79');
+    payload.append('grant_type', 'authorization_code');
+    payload.append('redirect_uri', 'https://www.spvaig.com/auth/instagram/callback');  // Match the redirect URI used in Step 1
+    payload.append('code', code);
 
-//     // Send the POST request to exchange the code for the access token
-//     const response = await axios.post('https://api.instagram.com/oauth/access_token', payload, {
-//       headers: {
-//         'Content-Type': 'application/x-www-form-urlencoded',
-//       },
-//     });
+    // Send the POST request to exchange the code for the access token
+    const response = await axios.post('https://api.instagram.com/oauth/access_token', payload, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
 
-//     const { access_token, user_id } = response.data;  // Extract access token and user ID
-//     console.log('code exchange response', response.data);
+    const { access_token, user_id } = response.data;  // Extract access token and user ID
+    console.log('code exchange response', response.data);
 
-//     // Redirect to /instagrampost route, passing the access token and user ID as query parameters
-//     res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
+    // Redirect to /instagrampost route, passing the access token and user ID as query parameters
+    res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
 
-//   } catch (error) {
-//     console.error('Error exchanging code for access token:', error.response ? error.response.data : error);
-//     res.status(500).send('Failed to exchange code for access token');
-//   }
-// });
+  } catch (error) {
+    console.error('Error exchanging code for access token:', error.response ? error.response.data : error);
+    res.status(500).send('Failed to exchange code for access token');
+  }
+});
 
 
   module.exports = router;
