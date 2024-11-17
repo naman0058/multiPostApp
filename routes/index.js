@@ -434,8 +434,8 @@ router.get('/auth/instagram/callback', async (req, res) => {
   try {
     // Prepare the payload for the token exchange
     const payload = {
-      client_id: '935002488442063',
-      client_secret: 'ea1b89b41131753ed9c603acdd2f9f79',
+      client_id: '441162705660684',
+      client_secret: '93e025dd145211f8b34581b24b6e27a4',
       grant_type: 'authorization_code',
       redirect_uri: 'https://www.spvaig.com/auth/instagram/callback',  // This should match the one used in Step 1
       code: code
@@ -469,8 +469,8 @@ router.get('/auth/instagram/callback', async (req, res) => {
   try {
     // Prepare the payload for the token exchange
     const payload = new URLSearchParams();
-    payload.append('client_id', '935002488442063');
-    payload.append('client_secret', 'ea1b89b41131753ed9c603acdd2f9f79');
+    payload.append('client_id', '441162705660684');
+    payload.append('client_secret', '93e025dd145211f8b34581b24b6e27a4');
     payload.append('grant_type', 'authorization_code');
     payload.append('redirect_uri', 'https://www.spvaig.com/auth/instagram/callback');  // Match the redirect URI used in Step 1
     payload.append('code', code);
