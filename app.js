@@ -100,7 +100,7 @@ passport.deserializeUser((obj, done) => {
 
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade'); // Consider using a more modern template engine like EJS or Pug
+app.set('view engine', 'ejs'); // Consider using a more modern template engine like EJS or Pug
 
 app.use(logger('dev'));
 app.use(express.json());

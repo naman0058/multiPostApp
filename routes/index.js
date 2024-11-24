@@ -109,83 +109,173 @@ router.get('/post-to-twitter', async (req, res) => {
     const authUrl = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${encodeURIComponent(scopes)}&state=${oauthData.state}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
     res.redirect(authUrl);
+
 });
 
-// Step 2: Handle Twitter callback
-router.get('/callback', async (req, res) => {
-    const { code, state } = req.query;
+// Step 2: Handle Twitter callback Working with Only Tweet
+// router.get('/callback', async (req, res) => {
+//     const { code, state } = req.query;
 
 
 
-    if (state !== oauthData.state) {
-        return res.status(400).send('State mismatch');
-    }
+//     if (state !== oauthData.state) {
+//         return res.status(400).send('State mismatch');
+//     }
 
-    const clientId = 'WkVjRjBfRmpwQlBaV0dKNktGVGo6MTpjaQ';
-    const clientSecret = 'm4_DGhbGIp7UwYJExyMh0PLQfIcJ1uom2x_2B-anYN-lcQxhg9';
-    const redirectUri = 'http://localhost:3000/callback';
-    const tokenEndpoint = 'https://api.twitter.com/2/oauth2/token';
-    const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+//     res.json({oauthData :oauthData ,query:req.query})
 
-    try {
-        const response = await axios.post(tokenEndpoint, new URLSearchParams({
-            code,
-            grant_type: 'authorization_code',
-            redirect_uri: redirectUri,
-            code_verifier: oauthData.codeVerifier
-        }), {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': `Basic ${basicAuth}`
-            }
-        });
+//     const clientId = 'WkVjRjBfRmpwQlBaV0dKNktGVGo6MTpjaQ';
+//     const clientSecret = 'm4_DGhbGIp7UwYJExyMh0PLQfIcJ1uom2x_2B-anYN-lcQxhg9';
+//     const redirectUri = 'http://localhost:3000/callback';
+//     const tokenEndpoint = 'https://api.twitter.com/2/oauth2/token';
+//     const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
 
-        const accessToken = response.data.access_token;
-    console.log('USers Data',response.data)
+//     try {
+//         const response = await axios.post(tokenEndpoint, new URLSearchParams({
+//             code,
+//             grant_type: 'authorization_code',
+//             redirect_uri: redirectUri,
+//             code_verifier: oauthData.codeVerifier
+//         }), {
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//                 'Authorization': `Basic ${basicAuth}`
+//             }
+//         });
 
-        console.log('accessToken', accessToken);
+//         const accessToken = response.data.access_token;
+//     console.log('USers Data',response)
+//     // res.json(response)
 
-        // Upload image to Twitter to get media_id
-        const imageUrl = 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png';
-        const base64image = Buffer.from(imageUrl).toString('base64');
-        // const mediaUploadResponse = await axios.post(
-        //     'https://upload.twitter.com/1.1/media/upload.json',
-        //     new URLSearchParams({
-        //         media: base64image
-        //     }),
-        //     {
-        //         headers: {
-        //             Authorization: `Bearer ${accessToken}`,
-        //             'Content-Type': 'application/x-www-form-urlencoded'
-        //         }
-        //     }
-        // );
+//         // console.log('accessToken', accessToken);
 
-        // const mediaId = mediaUploadResponse;
-        // console.log('mediaId', mediaId);
+//         // Upload image to Twitter to get media_id
+//         const imageUrl = 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png';
+//         const base64image = Buffer.from(imageUrl).toString('base64');
+//         const mediaUploadResponse = await axios.post(
+//             'https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image',
+//             new URLSearchParams({
+//                 media: base64image,
+//                 media_data:
+//             }),
+//             {
+//                 headers: {
+//                     Authorization: `Bearer ${accessToken}`,
+//                     'Content-Type': 'application/x-www-form-urlencoded'
+//                 }
+//             }
+//         );
 
-        // Now post the tweet with the image
-        const tweetText = 'Hello, world! This is my first tweet with image!';
-        const tweetResponse = await axios.post(
-            'https://api.twitter.com/2/tweets',
-            {
-                text: tweetText,
+//         const mediaId = mediaUploadResponse;
+//         // console.log('mediaId', mediaId);
+
+//         // Now post the tweet with the image
+//         const tweetText = 'Hello, This is my first tweet with image!';
+//         const tweetResponse = await axios.post(
+//             'https://api.twitter.com/2/tweets',
+//             {
+//                 text: tweetText,
               
-            },
-            {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`,
-                    'Content-Type': 'application/json'
-                }
-            }
-        );
+//             },
+//             {
+//                 headers: {
+//                     Authorization: `Bearer ${accessToken}`,
+//                     'Content-Type': 'application/json'
+//                 }
+//             }
+//         );
 
-        res.send(`Tweet posted successfully! ID: ${tweetResponse.data.data.id}`);
-    } catch (error) {
-        console.error('Error:',error);
-        res.status(500).send('Error posting tweet with image');
-    }
+//         res.send(`Tweet posted successfully! ID: ${tweetResponse.data.data.id}`);
+//     } catch (error) {
+//         // console.error('Error:',error);
+//         res.status(500).send('Error posting tweet with image');
+//     }
+// });
+
+
+
+
+router.get('/callback', async (req, res) => {
+  const { code, state } = req.query;
+
+  if (state !== oauthData.state) {
+      return res.status(400).send('State mismatch');
+  }
+
+  const clientId = 'WkVjRjBfRmpwQlBaV0dKNktGVGo6MTpjaQ';
+  const clientSecret = 'm4_DGhbGIp7UwYJExyMh0PLQfIcJ1uom2x_2B-anYN-lcQxhg9';
+  const redirectUri = 'http://localhost:3000/callback';
+  const tokenEndpoint = 'https://api.twitter.com/2/oauth2/token';
+  const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
+
+  try {
+      // Exchange authorization code for access token
+      const tokenResponse = await axios.post(
+          tokenEndpoint,
+          new URLSearchParams({
+              code,
+              grant_type: 'authorization_code',
+              redirect_uri: redirectUri,
+              code_verifier: oauthData.codeVerifier,
+          }),
+          {
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                  'Authorization': `Basic ${basicAuth}`,
+              },
+          }
+      );
+
+      const accessToken = tokenResponse.data.access_token;
+
+      // Media upload
+      const imageUrl = 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png';
+      const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+      const imageBase64 = Buffer.from(response.data).toString('base64');
+
+      const mediaUploadResponse = await axios.post(
+          'https://upload.twitter.com/1.1/media/upload.json',
+          new URLSearchParams({
+              media_data: imageBase64,
+              media_category: 'tweet_image',
+          }),
+          {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/x-www-form-urlencoded',
+              },
+          }
+      );
+
+      res.json(mediaUploadResponse)
+
+      const mediaId = mediaUploadResponse.data.media_id_string;
+
+      // Post tweet with media
+      const tweetText = 'Hello, This is my first tweet with an image!';
+      const tweetResponse = await axios.post(
+          'https://api.twitter.com/2/tweets',
+          {
+              text: tweetText,
+              media: {
+                  media_ids: [mediaId],
+              },
+          },
+          {
+              headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+              },
+          }
+      );
+
+      res.send(`Tweet posted successfully! ID: ${tweetResponse.data.data.id}`);
+  } catch (error) {
+      console.error('Error:', error.response?.data || error.message);
+      res.json(error)
+  }
 });
+
 
 
 
@@ -585,6 +675,11 @@ router.get('/instagrampost', async (req, res) => {
       res.status(500).send("Error posting to Instagram");
     }
   });
+
+
+  router.get('/facebook',(req,res)=>{
+    res.render('facebook')
+  })
   
 
 
