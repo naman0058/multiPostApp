@@ -427,8 +427,8 @@ router.get('/auth/instagram', passport.authenticate('instagram'));
 
 
 
-const INSTAGRAM_CLIENT_ID = '935002488442063';
-const INSTAGRAM_CLIENT_SECRET = 'ea1b89b41131753ed9c603acdd2f9f79';
+const INSTAGRAM_CLIENT_ID = '441162705660684';
+const INSTAGRAM_CLIENT_SECRET = '93e025dd145211f8b34581b24b6e27a4';
 const REDIRECT_URI = 'https://www.spvaig.com/auth/instagram/callback';
 
 router.get('/auth/instagram/callback', async (req, res) => {
