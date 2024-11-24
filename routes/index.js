@@ -553,7 +553,7 @@ router.get('/instagrampost', async (req, res) => {
   
       console.log('Media Conatiner ID:', uploadRes.data);
   
-      res.json(uploadRes.data)
+      // res.json(uploadRes.data)
 
 
   
@@ -561,7 +561,7 @@ router.get('/instagrampost', async (req, res) => {
       const PublishContainer = await axios.post(
         `https://graph.instagram.com/v21.0/${userId}/media_publish`,
         {
-          creation_id: uploadRes.data,
+          creation_id: uploadRes.data.id,
           access_token: accessToken
         }
       );
