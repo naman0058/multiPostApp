@@ -543,7 +543,7 @@ router.get('/instagrampost', async (req, res) => {
     try {
       // Step 1: Upload media to create a media container
       const uploadRes = await axios.post(
-        `https://graph.facebook.com/v21.0/${userId}/media`,
+        `https://graph.instagram.com/v21.0/8633342930115532/media`,
         {
           image_url: imageUrl,
           caption: caption,
@@ -551,9 +551,9 @@ router.get('/instagrampost', async (req, res) => {
         }
       );
   
-      console.log('UploadRes:', uploadRes);
+      console.log('UploadRes:', uploadRes.data);
   
-      res.json(uploadRes)
+      res.json(uploadRes.data)
   
      
   
