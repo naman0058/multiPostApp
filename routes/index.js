@@ -551,11 +551,26 @@ router.get('/instagrampost', async (req, res) => {
         }
       );
   
-      console.log('UploadRes:', uploadRes.data);
+      console.log('Media Conatiner ID:', uploadRes.data);
   
       res.json(uploadRes.data)
+
+
   
-     
+
+      const PublishContainer = await axios.post(
+        `https://graph.instagram.com/v21.0/${userId}/media_publish`,
+        {
+          creation_id: uploadRes.data,
+          access_token: accessToken
+        }
+      );
+  
+      console.log('Publish Conatiner ID:',PublishContainer);
+
+      res.json({msg:'success'})
+  
+            
   
       // Step 2: Publish media using the media container ID
      
