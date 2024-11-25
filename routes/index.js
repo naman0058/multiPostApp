@@ -62,7 +62,7 @@ router.get('/auth/twitter/callback',
     // });
 
     
-    res.redirect('/post-to-twitter');
+    res.redirect('/post-to-twitter1');
   });
 
 
@@ -112,87 +112,6 @@ router.get('/post-to-twitter', async (req, res) => {
 
 });
 
-// Step 2: Handle Twitter callback Working with Only Tweet
-// router.get('/callback', async (req, res) => {
-//     const { code, state } = req.query;
-
-
-
-//     if (state !== oauthData.state) {
-//         return res.status(400).send('State mismatch');
-//     }
-
-//     res.json({oauthData :oauthData ,query:req.query})
-
-//     const clientId = 'WkVjRjBfRmpwQlBaV0dKNktGVGo6MTpjaQ';
-//     const clientSecret = 'm4_DGhbGIp7UwYJExyMh0PLQfIcJ1uom2x_2B-anYN-lcQxhg9';
-//     const redirectUri = 'http://localhost:3000/callback';
-//     const tokenEndpoint = 'https://api.twitter.com/2/oauth2/token';
-//     const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-
-//     try {
-//         const response = await axios.post(tokenEndpoint, new URLSearchParams({
-//             code,
-//             grant_type: 'authorization_code',
-//             redirect_uri: redirectUri,
-//             code_verifier: oauthData.codeVerifier
-//         }), {
-//             headers: {
-//                 'Content-Type': 'application/x-www-form-urlencoded',
-//                 'Authorization': `Basic ${basicAuth}`
-//             }
-//         });
-
-//         const accessToken = response.data.access_token;
-//     console.log('USers Data',response)
-//     // res.json(response)
-
-//         // console.log('accessToken', accessToken);
-
-//         // Upload image to Twitter to get media_id
-//         const imageUrl = 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png';
-//         const base64image = Buffer.from(imageUrl).toString('base64');
-//         const mediaUploadResponse = await axios.post(
-//             'https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image',
-//             new URLSearchParams({
-//                 media: base64image,
-//                 media_data:
-//             }),
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${accessToken}`,
-//                     'Content-Type': 'application/x-www-form-urlencoded'
-//                 }
-//             }
-//         );
-
-//         const mediaId = mediaUploadResponse;
-//         // console.log('mediaId', mediaId);
-
-//         // Now post the tweet with the image
-//         const tweetText = 'Hello, This is my first tweet with image!';
-//         const tweetResponse = await axios.post(
-//             'https://api.twitter.com/2/tweets',
-//             {
-//                 text: tweetText,
-              
-//             },
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${accessToken}`,
-//                     'Content-Type': 'application/json'
-//                 }
-//             }
-//         );
-
-//         res.send(`Tweet posted successfully! ID: ${tweetResponse.data.data.id}`);
-//     } catch (error) {
-//         // console.error('Error:',error);
-//         res.status(500).send('Error posting tweet with image');
-//     }
-// });
-
-
 
 
 router.get('/callback', async (req, res) => {
@@ -201,6 +120,7 @@ router.get('/callback', async (req, res) => {
   if (state !== oauthData.state) {
       return res.status(400).send('State mismatch');
   }
+
 
   const clientId = 'WkVjRjBfRmpwQlBaV0dKNktGVGo6MTpjaQ';
   const clientSecret = 'm4_DGhbGIp7UwYJExyMh0PLQfIcJ1uom2x_2B-anYN-lcQxhg9';
@@ -228,38 +148,75 @@ router.get('/callback', async (req, res) => {
 
       const accessToken = tokenResponse.data.access_token;
 
-      // Media upload
+      console.log(tokenResponse.data)
+
+      // Get image data as Base64
       const imageUrl = 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png';
       const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
       const imageBase64 = Buffer.from(response.data).toString('base64');
 
-      const mediaUploadResponse = await axios.post(
-          'https://upload.twitter.com/1.1/media/upload.json',
-          new URLSearchParams({
+      // Twitter API credentials
+      const consumerKey = '2nx7h7ZexUH7oVF7kErfWts9r';
+      const consumerSecret = '9cM1ZVt7O1ZH4IrVbGl73eJVSnwALAfJptp4NmfzmSZV17SDxp';
+      // const accessToken1 = '1175441814125305856-ohu5Qe4xNKxjwfijMflz9lxtqZ1kk1';
+      // const accessTokenSecret = '83zFUPzdssENDcXCHPKN9k1GmMYAniLHs6TfTBWZRpG4i';
+
+       const accessToken1 = '1840412479815655424-fpRO5hRMdjngxZJgGvrrtpM5ZYyYbK';
+      const accessTokenSecret = 'pl3Ormfy3RkpcRRKiGmQEkjfIrYn065VsmGbDz3SpVL9N';
+      
+
+      // Initialize OAuth
+      const oauth = OAuth({
+          consumer: { key: consumerKey, secret: consumerSecret },
+          signature_method: 'HMAC-SHA1',
+          hash_function(baseString, key) {
+              return crypto.createHmac('sha1', key).update(baseString).digest('base64');
+          },
+      });
+
+      // Media upload
+      const url = 'https://upload.twitter.com/1.1/media/upload.json';
+      const requestData = {
+          url: url,
+          method: 'POST',
+          data: {
               media_data: imageBase64,
               media_category: 'tweet_image',
-          }),
+          },
+      };
+
+      const authHeader = oauth.toHeader(
+          oauth.authorize(requestData, { key: accessToken1, secret: accessTokenSecret })
+      );
+
+      const mediaUploadResponse = await axios.post(
+          url,
+          new URLSearchParams(requestData.data),
           {
               headers: {
-                  Authorization: `Bearer ${accessToken}`,
+                  ...authHeader,
                   'Content-Type': 'application/x-www-form-urlencoded',
               },
           }
       );
 
-      res.json(mediaUploadResponse)
+
+      console.log('mediaUploadResponse',mediaUploadResponse.data)
 
       const mediaId = mediaUploadResponse.data.media_id_string;
 
       // Post tweet with media
-      const tweetText = 'Hello, This is my first tweet with an image!';
+      const tweetText = 'Hello, This is my first tweet with an imag';
       const tweetResponse = await axios.post(
           'https://api.twitter.com/2/tweets',
           {
               text: tweetText,
               media: {
                   media_ids: [mediaId],
+                  // media_category:'tweet_image'
               },
+              // additional_owners:''
+              
           },
           {
               headers: {
@@ -272,9 +229,10 @@ router.get('/callback', async (req, res) => {
       res.send(`Tweet posted successfully! ID: ${tweetResponse.data.data.id}`);
   } catch (error) {
       console.error('Error:', error.response?.data || error.message);
-      res.json(error)
+      res.status(500).json(error.response?.data || error.message);
   }
 });
+
 
 
 
@@ -308,22 +266,22 @@ async function uploadMediaToTwitter(imagePath, accessToken) {
 
 
   // Route to handle posting content to Twitter
-//   router.get('/post-to-twitter', async (req, res) => {
-//     if (!req.isAuthenticated()) {
-//       return res.status(401).send('User not authenticated');
-//     }
+  router.get('/post-to-twitter1', async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).send('User not authenticated');
+    }
   
-//     const content = 'Tweet Text'; // The content to post
-//     const user = req.user; // The authenticated user
-//      console.log(user)
-//     // res.json({user:user,message:'fetch'})
-//     try {
-//       const response = await postToTwitter(user, content);
-//       return res.json(response);  // Send the response from Twitter API
-//     } catch (error) {
-//       return res.status(301).json({ error: error.message });  // Handle error
-//     }
-//   });
+    const content = 'Tweet Text'; // The content to post
+    const user = req.user; // The authenticated user
+     console.log(user)
+    // res.json({user:user,message:'fetch'})
+    try {
+      const response = await postToTwitter(user, content);
+      return res.json(response);  // Send the response from Twitter API
+    } catch (error) {
+      return res.status(301).json({ error: error.message });  // Handle error
+    }
+  });
   
 
 
@@ -516,6 +474,44 @@ router.get('/auth/instagram', passport.authenticate('instagram'));
 
 
 
+async function createRecordInAirtable(access_token,user_id) {
+  const url = 'https://api.airtable.com/v0/appRpxG6vjd1AyqIs/tblAPmf1cpJffQy8R';
+  const bearerToken = 'pat6nJpcTLLrYBZDL.e73adec8b3d5025c80053dd03d7dfd9d31b65e3df1ede273d79cbc94ee89abab';
+
+  const data = {
+      records: [
+          {
+              fields: {
+                  Medium: 'Instagram',
+                  "IG Long Token": access_token,
+                  "Record id": user_id,
+              },
+          },
+      ],
+  };
+
+  try {
+      const response = await axios.post(url, data, {
+          headers: {
+              Authorization: `Bearer ${bearerToken}`,
+              'Content-Type': 'application/json',
+          },
+      });
+
+      return {
+          success: true,
+          data: response.data,
+      };
+  } catch (error) {
+      return {
+          success: false,
+          error: error.response?.data || error.message,
+      };
+  }
+}
+
+
+
 
 const INSTAGRAM_CLIENT_ID = '441162705660684';
 const INSTAGRAM_CLIENT_SECRET = '93e025dd145211f8b34581b24b6e27a4';
@@ -548,7 +544,19 @@ router.get('/auth/instagram/callback', async (req, res) => {
      console.log('Long Lived Token Output',longLivedToken)
     
     // Redirect or respond with a success message
-     res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
+    //  res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
+    const result = await createRecordInAirtable(access_token,user_id);
+    if (result.success) {
+      res.status(201).json({
+          message: 'Record created successfully',
+          data: result.data,
+      });
+  } else {
+      res.status(500).json({
+          message: 'Error creating record',
+          error: result.error,
+      });
+  }
 
   } catch (error) {
     console.error('Error exchanging code for access token:', error.response ? error.response.data : error);
