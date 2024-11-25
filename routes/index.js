@@ -552,12 +552,12 @@ router.get('/auth/instagram/callback', async (req, res) => {
     const { access_token , user_id } = response.data;
     console.log('Short-lived token response:', response.data);
    
-    const longLivedToken = await longlivedtoken(response.data.access_token)
-     console.log('Long Lived Token Output',longLivedToken)
+    // const longLivedToken = await longlivedtoken(response.data.access_token)
+    //  console.log('Long Lived Token Output',longLivedToken)
     
     // Redirect or respond with a success message
     //  res.redirect(`/instagrampost?access_token=${access_token}&user_id=${user_id}`);
-    const result = await createRecordInAirtable(access_token,user_id);
+    const result = await createRecordInAirtable(response.data.access_token,user_id);
     if (result.success) {
       res.status(201).json({
           message: 'Record created successfully',
