@@ -519,8 +519,8 @@ async function createRecordInAirtable(access_token,user_id) {
 
 
 
-const INSTAGRAM_CLIENT_ID = '441162705660684';
-const INSTAGRAM_CLIENT_SECRET = '93e025dd145211f8b34581b24b6e27a4';
+const INSTAGRAM_CLIENT_ID = '935002488442063';
+const INSTAGRAM_CLIENT_SECRET = 'ea1b89b41131753ed9c603acdd2f9f79';
 const REDIRECT_URI = 'https://www.spvaig.com/auth/instagram/callback';
 
 
@@ -587,7 +587,7 @@ async function longlivedtoken(shortLivedToken) {
     const response = await axios.get('https://graph.instagram.com/access_token', {
       params: {
         grant_type: 'ig_exchange_token',
-        // client_secret: '93e025dd145211f8b34581b24b6e27a4',  // Replace with your actual Instagram client secret
+        // client_secret: 'ea1b89b41131753ed9c603acdd2f9f79',  // Replace with your actual Instagram client secret
         access_token: shortLivedToken
       }
     });
