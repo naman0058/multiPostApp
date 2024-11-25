@@ -588,7 +588,7 @@ async function longlivedtoken(shortLivedToken) {
     const response = await axios.get('https://graph.instagram.com/access_token', {
       params: {
         grant_type: 'ig_exchange_token',
-        client_secret: '93e025dd145211f8b34581b24b6e27a4',  // Replace with your actual Instagram client secret
+        // client_secret: '93e025dd145211f8b34581b24b6e27a4',  // Replace with your actual Instagram client secret
         access_token: shortLivedToken
       }
     });
