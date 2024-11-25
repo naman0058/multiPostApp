@@ -531,7 +531,6 @@ const REDIRECT_URI = 'https://www.spvaig.com/auth/instagram/callback';
 router.get('/auth/instagram/callback', async (req, res) => {
   const code = req.query.code;
 
-  res.json(req.query)
 
   if (!code) {
     return res.status(400).send('Code not found');
