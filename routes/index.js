@@ -486,8 +486,7 @@ async function createRecordInAirtable(access_token,user_id) {
           {
               fields: {
                   Medium: 'Instagram',
-                  "IG Long Token": access_token,
-                  "Record id": 'rec123456789',
+                  "IG Short Token": access_token,
                   "IG User Id": user_id.toString()
               },
           },
