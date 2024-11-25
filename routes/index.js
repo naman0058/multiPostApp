@@ -475,6 +475,9 @@ router.get('/auth/instagram', passport.authenticate('instagram'));
 
 
 async function createRecordInAirtable(access_token,user_id) {
+  console.log('IG Long Token',access_token)
+  console.log('Record id',user_id)
+
   const url = 'https://api.airtable.com/v0/appRpxG6vjd1AyqIs/tblAPmf1cpJffQy8R';
   const bearerToken = 'pat6nJpcTLLrYBZDL.e73adec8b3d5025c80053dd03d7dfd9d31b65e3df1ede273d79cbc94ee89abab';
 
