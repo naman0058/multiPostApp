@@ -488,7 +488,7 @@ async function createRecordInAirtable(access_token,user_id) {
                   Medium: 'Instagram',
                   "IG Long Token": access_token,
                   "Record id": 'rec123456789',
-                  "User id": user_id
+                  "IG User Id": user_id
               },
           },
       ],
@@ -526,14 +526,7 @@ const REDIRECT_URI = 'https://www.spvaig.com/auth/instagram/callback';
 
 
 
-router.get('/userRecord',(req,res)=>{
-  req.session.recordid = req.query.record;
 
-  console.log('session data',req.session.recordid)
-  console.log('query data',req.query.recordid)
-
-  res.redirect('https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=441162705660684&redirect_uri=https://www.spvaig.com/auth/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish&record=rec6F8gjRtZ0mG3GO ')
-})
 
 router.get('/auth/instagram/callback', async (req, res) => {
   const code = req.query.code;
